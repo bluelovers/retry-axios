@@ -1,10 +1,11 @@
 {
-  "name": "retry-axios",
-  "version": "0.0.0",
+  "name": "@bluelovers/retry-axios",
+  "version": "3.0.0",
   "description": "Retry HTTP requests with Axios.",
   "keywords": [
     "axios",
-    "retry"
+    "retry",
+    "create-by-yarn-tool"
   ],
   "homepage": "https://github.com/JustinBeckwith/retry-axios#readme",
   "bugs": {
@@ -39,19 +40,52 @@
     "dist"
   ],
   "scripts": {
+    "lint": "gts check",
+    "pretest": "npm run compile",
+    "test": "c8 mocha",
+    "test:jest": "jest --passWithNoTests",
+    "test:jest:clearCache": "jest --clearCache",
+    "test:jest:snapshot": "yarn run test:jest -- -u",
+    "test:snapshot": "yarn run test -- -u",
+    "test:tsd": "ynpx tsd",
+    "install:frozenLockfile": "yarn-tool install --frozen-lockfile",
+    "install:resetLockfile": "yarn-tool install --reset-lockfile",
     "build": "yarn run build:tsdx && yarn run build:dts:tsc",
     "build:dts:bundle": "npx @bluelovers/dts-bundle-generator -o ./dist/index.d.ts ./src/index.ts --no-banner --inline-declare-global & echo build:dts:bundle",
     "build:dts:copy": "copy .\\src\\index.d.ts .\\dist\\index.d.ts & echo build:dts",
     "build:dts:tsc": "yarn run build:dts:copy && yarn run build:dts:tsc:emit && yarn run build:dts:copy",
     "build:dts:tsc:emit": "tsc --declaration --noEmit false",
     "build:tsdx": "npx @bluelovers/tsdx build --target node",
-    "lint": "gts check",
+    "ci:install": "yarn install --frozen-lockfile && yarn add -W yarn-tool lerna ynpx ts-node ts-jest jest typescript@next @bluelovers/jest-config",
+    "ci:build": "echo ci:build",
+    "npm:publish": "npm publish",
+    "npm:publish:bump": "yarn run version:bump && npm publish",
+    "ws:fix-all": "yarn-tool fix-all  --overwriteHostedGitInfo",
+    "ws:fix-all:resetStaticFiles": "yarn run ws:fix-all -- --resetStaticFiles",
+    "version": "echo version",
+    "version:bump": "yarn-tool version",
+    "postversion": "echo postversion",
+    "prepublish": "echo prepublish",
+    "prepare": "echo prepare",
+    "prepublishOnly:check-bin": "ynpx --quiet @yarn-tool/check-pkg-bin",
+    "prepublishOnly:update": "yarn run ncu && yarn run sort-package-json",
+    "prepack": "echo prepack",
+    "pack": "echo pack",
+    "postpack": "echo postpack",
+    "publish": "echo publish",
+    "postpublish": "yarn run postpublish:changelog && yarn run postpublish:git:commit && yarn run postpublish:git:tag && yarn run postpublish:git:push",
+    "postpublish:changelog": "ynpx --quiet @yarn-tool/changelog && git add ./CHANGELOG.md",
+    "postpublish:git:commit": "git commit -m \"chore(release): publish\" . & echo postpublish:git:commit",
+    "postpublish:git:push": "git push --follow-tags",
+    "postpublish:git:tag": "ynpx --quiet @yarn-tool/tag",
+    "postpublishOnly": "echo postpublishOnly",
     "clean": "gts clean",
-    "fix": "gts fix",
     "compile": "yarn run build",
-    "test": "c8 mocha",
-    "pretest": "npm run compile",
-    "license-check": "jsgl --local ."
+    "fix": "gts fix",
+    "license-check": "jsgl --local .",
+    "ncu": "yarn-tool ncu -u",
+    "sort-package-json": "yarn-tool sort",
+    "tsc:showConfig": "ynpx get-current-tsconfig -p"
   },
   "c8": {
     "exclude": [
@@ -80,5 +114,8 @@
   "packageManager": "yarn@1.22.19",
   "engines": {
     "node": ">=14"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
